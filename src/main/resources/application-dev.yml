@@ -1,0 +1,18 @@
+app:
+  name: My App
+  description: Spring Boot Application (Development Profile)
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/myDb
+    username: postgres
+    password: postgres
+  jpa:
+    open-in-view: false
+    properties:
+      hibernate:
+        ddl-auto: update
+        hbm2ddl:
+          auto: update
+        transaction:
+          jta:
+            platform: JBossTS
