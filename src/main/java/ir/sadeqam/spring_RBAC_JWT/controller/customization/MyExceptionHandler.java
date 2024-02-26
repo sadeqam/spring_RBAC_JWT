@@ -5,17 +5,21 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.nio.file.AccessDeniedException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-@ControllerAdvice
+@RestControllerAdvice
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class MyExceptionHandler {
+
+    // TODO don't forget logging !!!!
 
     @ExceptionHandler(DataNotFoundException.class)
     public ResponseEntity<Map<String, String>> handleDataNotFoundException(DataNotFoundException e) {
@@ -33,6 +37,22 @@ public class MyExceptionHandler {
         );
     }
 
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<Map<String, String>> handleAuthenticationException(AuthenticationException e) {
+        return new ResponseEntity<>(
+                generateResponse(e),
+                HttpStatus.UNAUTHORIZED
+        );
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<Map<String, String>> handleAccessDeniedException(AccessDeniedException e) {
+        return new ResponseEntity<>(
+                generateResponse(e),
+                HttpStatus.FORBIDDEN
+        );
+    }
+
     @ExceptionHandler(Throwable.class)
     public ResponseEntity<Map<String, String>> handleGeneralThrowable(Throwable throwable) {
         return new ResponseEntity<>(
@@ -40,7 +60,6 @@ public class MyExceptionHandler {
                 HttpStatus.INTERNAL_SERVER_ERROR
         );
     }
-
 
     private HashMap<String, String> generateResponse(Throwable e) {
         var response = new HashMap<String, String>();

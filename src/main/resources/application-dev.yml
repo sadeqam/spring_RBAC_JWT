@@ -1,6 +1,11 @@
 app:
-  name: My App
   description: Spring Boot Application (Development Profile)
+  security:
+    jwt:
+      secret-key: change me in production !! ( use environment variable or ... )
+      issuer: ${app.name}
+      expire-after: 3600000
+
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/myDb
